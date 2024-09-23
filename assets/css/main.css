@@ -1,0 +1,256 @@
+@import url(./base.css);
+
+.wrapper {
+  width: 1200px;
+  margin: 0 auto;
+  padding-top: 30px;
+
+  .main-title {
+    width: fit-content;
+    padding: 10px 40px;
+    border-radius: 999px;
+    background-color: rgb(113, 210, 243);
+    color: #fff;
+  }
+
+  .menu-box {
+    margin-top: 30px;
+    height: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 15px;
+    column-gap: 30px;
+    align-items: center;
+
+    .__menu-item {
+      --height: 35px;
+      width: 100px;
+      height: var(--height);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: calc(var(--height) / 2);
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+
+      &:active {
+        filter: brightness(0.8);
+      }
+    }
+
+    .__menu-item-tmp {
+      color: transparent !important;
+      background-color: transparent !important;
+    }
+  }
+
+  .tasks-list {
+    margin-top: 30px;
+    min-height: 30px;
+    padding: 14px;
+    background-color: #ffdf4e;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 581px 581px;
+    grid-template-rows: 60px;
+    column-gap: 10px;
+    row-gap: 10px;
+
+    .__task {
+      width: 100%;
+      height: 60px;
+      border-radius: 999px;
+      padding: 0 15px;
+      background-color: rgb(0, 191, 255);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: .3s;
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+
+      &:active {
+        filter: brightness(0.9);
+      }
+    }
+
+    .__task--selected {
+      border: 2px solid #000;
+    }
+
+    .__order {
+      width: 25px;
+      height: 25px;
+      font-size: 12px;
+      border-radius: 9999px;
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    p {
+      color: #fff;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .__title {
+      font-size: 20px;
+      font-weight: bold;
+      width: 150px;
+    }
+
+    .__detail {
+      color: #e4e4e4;
+      font-size: 12px;
+      width: 300px;
+    }
+
+    .__expand {
+      margin-left: auto;
+      width: 25px;
+      height: 25px;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 9999px;
+      cursor: pointer;
+
+      &:hover {
+        filter: brightness(0.7);
+      }
+
+      &:active {
+        filter: brightness(0.5);
+      }
+    }
+  }
+}
+
+.mask {
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .6);
+  position: fixed;
+  inset: 0;
+  justify-content: center;
+  align-items: center;
+
+  .add-task-panel {
+    width: 600px;
+    height: fit-content;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+
+    h2 {
+      display: inline;
+      width: fit-content;
+    }
+
+    .__error-len {
+      margin-left: 10px;
+      font-size: 12px;
+      color: red;
+    }
+
+    .add-task-form {
+      margin-top: 30px;
+      padding: 0 30px;
+
+      .__item {
+        position: relative;
+        height: fit-content;
+        margin-bottom: 25px;
+
+        .__title {
+          position: absolute;
+          padding: 0 10px;
+          top: -10px;
+          left: 15px;
+          background-color: #fff;
+        }
+
+        .__input-text {
+          margin-top: 15px;
+          padding: 0 10px;
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 50px;
+          border: 2px solid #000;
+          border-radius: 15px;
+          font-size: 18px;
+        }
+
+        .__input-textarea {
+          padding: 20px 10px;
+          width: 100%;
+          min-width: 100%;
+          max-width: 100%;
+          height: 130px;
+          min-height: 130px;
+          max-height: 130px;
+          border: 2px solid #000;
+          border-radius: 15px;
+        }
+
+        .__input-date {
+          height: 50px;
+          border-radius: 10px;
+          border: 2px solid #000;
+          display: flex;
+          align-items: center;
+          padding: 10px;
+
+          input {
+            border: 1px solid #000;
+          }
+        }
+      }
+
+      .__btn-area {
+        display: flex;
+        gap: 20px;
+        height: fit-content;
+
+        .__button {
+          display: block;
+          width: 120px;
+          height: 40px;
+          border-radius: 10px;
+          cursor: pointer;
+
+          &:hover {
+            filter: brightness(1.1);
+          }
+
+          &:active {
+            filter: brightness(0.9);
+          }
+        }
+
+        .--cancel {
+          background-color: rgb(204, 204, 204);
+        }
+
+        .--confirm {
+          background-color: rgb(0, 153, 255);
+          color: #fff;
+          margin-left: auto;
+        }
+      }
+    }
+  }
+}
