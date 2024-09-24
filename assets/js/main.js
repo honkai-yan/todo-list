@@ -31,6 +31,7 @@ import { Task } from "./task.js";
       body: null,
       menuBox: null,
       tasksContainer: null,
+      taskElms: null,
       addTaskPanelMask: null,
     },
     events: {
@@ -83,10 +84,18 @@ import { Task } from "./task.js";
           taskDeadTimeController.value = "";
           addTaskPanelMask.style.display = "none";
         };
-        App.methods.bindEvent(btns[1], "click", cancelAddTask);
-        App.methods.bindEvent(btns[0], "click", confirmAddTask);
-        App.methods.bindEvent(taskNameController, "input", clearErrorLen);
-        App.methods.bindEvent(taskDeadTimeController, "change", clearErrorLen);
+        App.methods.bindEventWithNoParas(btns[1], "click", cancelAddTask);
+        App.methods.bindEventWithNoParas(btns[0], "click", confirmAddTask);
+        App.methods.bindEventWithNoParas(
+          taskNameController,
+          "input",
+          clearErrorLen
+        );
+        App.methods.bindEventWithNoParas(
+          taskDeadTimeController,
+          "change",
+          clearErrorLen
+        );
       },
       selectTaskItem(index) {
         const task = App.tasks[index];
@@ -135,12 +144,24 @@ import { Task } from "./task.js";
         menuBox.appendChild(fragment);
         console.log("menu box renderd successfully.");
       },
-      bindEvent(elm, eventType, fn) {
+      bindEventWithNoParas(elm, eventType, fn) {
         if (typeof eventType !== "string" || typeof fn !== "function")
           throw new Error(
             `invalid parameter...eventType: ${eventType}, fn: ${fn}`
           );
         elm.addEventListener(eventType, fn);
+      },
+      bindEventWithParas(elm, eventType, fn, paras) {
+        if (typeof eventType !== "string" || typeof fn !== "function")
+          throw new Error(
+            `invalid parameter: eventType: ${eventType}, fn: ${fn}`
+          );
+        if (!(paras instanceof Array)) {
+          throw new Error(
+            `invalid parameter 'paras', it can only be an array, but received a ${paras}`
+          );
+        }
+        elm.addEventListener(eventType, fn.bind(App, ...paras));
       },
       removeEvent(elm, eventType, fn) {
         if (typeof eventType !== "string" || typeof fn !== "function")
@@ -151,9 +172,13 @@ import { Task } from "./task.js";
       },
       bindMenuItemEvent(menuItems, eventFns) {
         console.log("start binding menu items events...");
-        this.bindEvent(menuItems[0].elm, "click", eventFns.addTask);
-        this.bindEvent(menuItems[1].elm, "click", eventFns.delTask);
-        this.bindEvent(menuItems[2].elm, "click", eventFns.changeTaskSort);
+        this.bindEventWithNoParas(menuItems[0].elm, "click", eventFns.addTask);
+        this.bindEventWithNoParas(menuItems[1].elm, "click", eventFns.delTask);
+        this.bindEventWithNoParas(
+          menuItems[2].elm,
+          "click",
+          eventFns.changeTaskSort
+        );
         console.log("menu items events binded successfully.");
       },
       getScreenSize() {
@@ -162,7 +187,12 @@ import { Task } from "./task.js";
       addTask(task) {
         if (task instanceof Task) {
           App.tasks.unshift(task);
-          this.renderTasks(App.elms.tasksContainer, App.tasks);
+          this.renderTasks(
+            App.elms.tasksContainer,
+            App.tasks,
+            App.events.selectTaskItem
+          );
+          this.updateTaskElms(App.elms.tasksContainer);
         } else {
           throw new Error(`invalid task type, the task is ${task}.`);
         }
@@ -170,13 +200,18 @@ import { Task } from "./task.js";
       isListFull() {
         return App.tasks.length >= MAX_TASK_NUM;
       },
-      renderTasks(tasksContainer, tasks) {
+      renderTasks(tasksContainer, tasks, selectTaskItemFn) {
         const fragment = document.createDocumentFragment();
         const parser = new DOMParser();
         tasksContainer.innerHTML = "";
         for (let i = 0; i < tasks.length; i++) {
           const task = tasks[i];
-          fragment.append(parser.parseFromString(task.getRenderElm(i + 1), "text/html").body.childNodes[0]);
+          const taskElm = parser.parseFromString(
+            task.getRenderElm(i + 1),
+            "text/html"
+          ).body.childNodes[0];
+          this.bindEventWithParas(taskElm, "click", selectTaskItemFn, [i]);
+          fragment.append(taskElm);
         }
         tasksContainer.append(fragment);
       },
