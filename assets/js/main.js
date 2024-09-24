@@ -8,6 +8,17 @@ import { Task } from "./task.js";
 
   const MAX_TASK_NUM = 20;
 
+  const COLORS_CONSTANT = [
+    "rgb(0, 191, 255)",
+    "rgb(0, 216, 180)",
+    "rgb(54, 91, 255)",
+    "rgb(148, 54, 255)",
+    "rgb(255, 79, 187)",
+    "rgb(255, 93, 93)",
+    "rgb(0, 216, 65)",
+    "rgb(216, 115, 0)",
+  ];
+
   const App = {
     tasks: [],
     menuItems: [
@@ -225,6 +236,8 @@ import { Task } from "./task.js";
             task.getRenderElm(i + 1),
             "text/html"
           ).body.childNodes[0];
+          taskElm.style.backgroundColor =
+            this.pickColorRandomly(COLORS_CONSTANT);
           this.bindEventWithParas(taskElm, "click", selectTaskItemFn, [i]);
           fragment.append(taskElm);
         }
@@ -247,15 +260,51 @@ import { Task } from "./task.js";
         }
         return selectedTasksIndex;
       },
+      pickColorRandomly(colorList) {
+        return colorList[Math.floor(Math.random() * colorList.length)];
+      },
+      getAllTasksInfo() {
+        const allTasksInfo = [];
+        for (const task of App.tasks) {
+          allTasksInfo.push(task.getTaskObj());
+        }
+        return allTasksInfo;
+      },
+      reconstructTasks() {
+        console.log("reading datas...");
+        const allTasksInfo = JSON.parse(
+          window.localStorage.getItem("all_tasks")
+        );
+        console.info(allTasksInfo);
+        if (allTasksInfo) {
+          for (let i = allTasksInfo.length - 1; i >= 0; i--) {
+            const item = allTasksInfo[i];
+            this.addTask(new Task(item.name, item.detail));
+          }
+          this.renderTasks(
+            App.elms.tasksContainer,
+            App.tasks,
+            App.events.selectTaskItem
+          );
+        }
+
+        console.log("data reconstructed successfully.");
+      },
     },
     initApp() {
       console.log("start initializing App...");
       this.methods.initElms(this.elms);
       this.methods.renderMenuBox(this.menuItems);
       this.methods.bindMenuItemEvent(this.menuItems, this.events);
+      this.methods.reconstructTasks();
       console.log("App loaded successfully.");
     },
   };
 
   App.initApp();
+
+  window.addEventListener("beforeunload", () => {
+    const allTasksInfo = App.methods.getAllTasksInfo();
+    window.localStorage.setItem("all_tasks", JSON.stringify(allTasksInfo));
+  });
 })();
