@@ -3,7 +3,7 @@ export class Task {
   detail;
   isSelected;
 
-  constructor(name, detail, deadTime) {
+  constructor(name, detail) {
     this.name = name;
     this.detail = detail;
     this.isSelected = false;
