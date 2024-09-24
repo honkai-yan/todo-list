@@ -100,7 +100,15 @@ import { Task } from "./task.js";
           taskElm.classList.add("__task--selected");
         }
       },
-      delTask() {},
+      delTask() {
+        const selectedTasksIndex = App.methods.getSelectedTasks(App.tasks);
+        if (selectedTasksIndex.length === 0) {
+          alert("没有选中任何任务。");
+          return;
+        }
+        const isDel = confirm("确认要删除已选中的所有任务吗？");
+        if (!isDel) return;
+      },
       changeTaskSort() {},
     },
     methods: {
@@ -185,7 +193,14 @@ import { Task } from "./task.js";
       },
       updateTaskElms(container) {
         App.elms.taskElms = container.querySelectorAll(".__task");
-      }
+      },
+      getSelectedTasks(tasks) {
+        const selectedTasksIndex = [];
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i].isSelected) selectedTasksIndex.push(i);
+        }
+        return selectedTasksIndex;
+      },
     },
     initApp() {
       console.log("start initializing App...");
