@@ -205,19 +205,6 @@
           border: 2px solid #000;
           border-radius: 15px;
         }
-
-        .__input-date {
-          height: 50px;
-          border-radius: 10px;
-          border: 2px solid #000;
-          display: flex;
-          align-items: center;
-          padding: 10px;
-
-          input {
-            border: 1px solid #000;
-          }
-        }
       }
 
       .__btn-area {

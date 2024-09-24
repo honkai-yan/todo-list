@@ -47,7 +47,6 @@ import { Task } from "./task.js";
         const {
           taskNameController,
           taskDetailController,
-          taskDeadTimeController,
         } = App.methods.getAddTaskPanelController(addTaskPanelMask);
         const clearErrorLen = () => {
           errorLen.innerHTML = "";
@@ -60,28 +59,17 @@ import { Task } from "./task.js";
           App.methods.removeEvent(btns[1], "click", cancelAddTask);
           App.methods.removeEvent(btns[0], "click", confirmAddTask);
           App.methods.removeEvent(taskNameController, "input", clearErrorLen);
-          App.methods.removeEvent(
-            taskDeadTimeController,
-            "change",
-            clearErrorLen
-          );
         };
         const confirmAddTask = () => {
           const taskName = taskNameController.value;
           const taskDetail = taskDetailController.value.trim();
-          const deadTime = taskDeadTimeController.value;
           if (taskName === "") {
             setErrorLen("请填写任务名称");
             return;
           }
-          if (deadTime === "") {
-            setErrorLen("请选择截至日期");
-            return;
-          }
-          App.methods.addTask(new Task(taskName, taskDetail, deadTime));
+          App.methods.addTask(new Task(taskName, taskDetail));
           taskNameController.value = "";
           taskDetailController.value = "";
-          taskDeadTimeController.value = "";
           addTaskPanelMask.style.display = "none";
         };
         App.methods.bindEventWithNoParas(btns[1], "click", cancelAddTask);
@@ -89,11 +77,6 @@ import { Task } from "./task.js";
         App.methods.bindEventWithNoParas(
           taskNameController,
           "input",
-          clearErrorLen
-        );
-        App.methods.bindEventWithNoParas(
-          taskDeadTimeController,
-          "change",
           clearErrorLen
         );
       },
@@ -229,7 +212,6 @@ import { Task } from "./task.js";
         return {
           taskNameController: panelElm.querySelector("#-app-task-name"),
           taskDetailController: panelElm.querySelector("#-app-task-detail"),
-          taskDeadTimeController: panelElm.querySelector("#-app-task-date"),
         };
       },
       updateTaskElms(container) {

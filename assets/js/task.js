@@ -1,13 +1,11 @@
 export class Task {
   name;
   detail;
-  deadTime;
   isSelected;
 
   constructor(name, detail, deadTime) {
     this.name = name;
     this.detail = detail;
-    this.deadTime = deadTime;
     this.isSelected = false;
   }
 
@@ -15,7 +13,6 @@ export class Task {
     return {
       name: this.name,
       detail: this.detail,
-      deadTime: this.deadTime,
     };
   }
 
