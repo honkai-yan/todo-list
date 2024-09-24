@@ -22,8 +22,13 @@ import { Task } from "./task.js";
         elm: null,
       },
       {
-        text: "排序方式",
+        text: "全选",
         color: "lightgreen",
+        elm: null,
+      },
+      {
+        text: "全不选",
+        color: "yellow",
         elm: null,
       },
     ],
@@ -44,10 +49,8 @@ import { Task } from "./task.js";
         addTaskPanelMask.style.display = "flex";
         const btns = addTaskPanelMask.querySelectorAll(".__btn-area .__button");
         const errorLen = addTaskPanelMask.querySelector(".__error-len");
-        const {
-          taskNameController,
-          taskDetailController,
-        } = App.methods.getAddTaskPanelController(addTaskPanelMask);
+        const { taskNameController, taskDetailController } =
+          App.methods.getAddTaskPanelController(addTaskPanelMask);
         const clearErrorLen = () => {
           errorLen.innerHTML = "";
         };
@@ -110,7 +113,22 @@ import { Task } from "./task.js";
           App.events.selectTaskItem
         );
       },
-      changeTaskSort() {},
+      selectAll() {
+        const tasks = App.tasks;
+        const taskElms = App.elms.taskElms;
+        for (let i = 0; i < tasks.length; i++) {
+          tasks[i].isSelected = true;
+          taskElms[i].classList.add("__task--selected");
+        }
+      },
+      disSelectAll() {
+        const tasks = App.tasks;
+        const taskElms = App.elms.taskElms;
+        for (let i = 0; i < tasks.length; i++) {
+          tasks[i].isSelected = false;
+          taskElms[i].classList.remove("__task--selected");
+        }
+      },
     },
     methods: {
       initElms(elms) {
@@ -170,7 +188,12 @@ import { Task } from "./task.js";
         this.bindEventWithNoParas(
           menuItems[2].elm,
           "click",
-          eventFns.changeTaskSort
+          eventFns.selectAll
+        );
+        this.bindEventWithNoParas(
+          menuItems[3].elm,
+          "click",
+          eventFns.disSelectAll
         );
         console.log("menu items events binded successfully.");
       },
