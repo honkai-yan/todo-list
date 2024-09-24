@@ -116,6 +116,16 @@ import { Task } from "./task.js";
         }
         const isDel = confirm("确认要删除已选中的所有任务吗？");
         if (!isDel) return;
+        const tasks = App.tasks;
+        for (const index of selectedTasksIndex) {
+          tasks[index] = null;
+        }
+        App.tasks = tasks.filter((item) => item !== null);
+        App.methods.renderTasks(
+          App.elms.tasksContainer,
+          App.tasks,
+          App.events.selectTaskItem
+        );
       },
       changeTaskSort() {},
     },
@@ -192,7 +202,6 @@ import { Task } from "./task.js";
             App.tasks,
             App.events.selectTaskItem
           );
-          this.updateTaskElms(App.elms.tasksContainer);
         } else {
           throw new Error(`invalid task type, the task is ${task}.`);
         }
@@ -214,6 +223,7 @@ import { Task } from "./task.js";
           fragment.append(taskElm);
         }
         tasksContainer.append(fragment);
+        this.updateTaskElms(App.elms.tasksContainer);
       },
       getAddTaskPanelController(panelElm) {
         return {
