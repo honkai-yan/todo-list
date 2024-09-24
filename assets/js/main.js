@@ -88,7 +88,26 @@ import { Task } from "./task.js";
         App.methods.bindEvent(taskNameController, "input", clearErrorLen);
         App.methods.bindEvent(taskDeadTimeController, "change", clearErrorLen);
       },
-      delTask() {},
+      selectTaskItem(index) {
+        const task = App.tasks[index];
+        const taskElm = App.elms.taskElms[index];
+        if (task.isSelected) {
+          task.isSelected = false;
+          taskElm.classList.remove("__task--selected");
+        } else {
+          task.isSelected = true;
+          taskElm.classList.add("__task--selected");
+        }
+      },
+      delTask() {
+        const selectedTasksIndex = App.methods.getSelectedTasks(App.tasks);
+        if (selectedTasksIndex.length === 0) {
+          alert("没有选中任何任务。");
+          return;
+        }
+        const isDel = confirm("确认要删除已选中的所有任务吗？");
+        if (!isDel) return;
+      },
       changeTaskSort() {},
     },
     methods: {
@@ -167,6 +186,16 @@ import { Task } from "./task.js";
           taskDetailController: panelElm.querySelector("#-app-task-detail"),
           taskDeadTimeController: panelElm.querySelector("#-app-task-date"),
         };
+      },
+      updateTaskElms(container) {
+        App.elms.taskElms = container.querySelectorAll(".__task");
+      },
+      getSelectedTasks(tasks) {
+        const selectedTasksIndex = [];
+        for (let i = 0; i < tasks.length; i++) {
+          if (tasks[i].isSelected) selectedTasksIndex.push(i);
+        }
+        return selectedTasksIndex;
       },
     },
     initApp() {
