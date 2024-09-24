@@ -31,6 +31,7 @@ import { Task } from "./task.js";
       body: null,
       menuBox: null,
       tasksContainer: null,
+      taskElms: null,
       addTaskPanelMask: null,
     },
     events: {
@@ -88,6 +89,17 @@ import { Task } from "./task.js";
         App.methods.bindEvent(taskNameController, "input", clearErrorLen);
         App.methods.bindEvent(taskDeadTimeController, "change", clearErrorLen);
       },
+      selectTaskItem(index) {
+        const task = App.tasks[index];
+        const taskElm = App.elms.taskElms[index];
+        if (task.isSelected) {
+          task.isSelected = false;
+          taskElm.classList.remove("__task--selected");
+        } else {
+          task.isSelected = true;
+          taskElm.classList.add("__task--selected");
+        }
+      },
       delTask() {},
       changeTaskSort() {},
     },
@@ -143,7 +155,8 @@ import { Task } from "./task.js";
       addTask(task) {
         if (task instanceof Task) {
           App.tasks.unshift(task);
-          this.renderTasks(App.elms.tasksContainer, App.tasks);
+          this.renderTasks(App.elms.tasksContainer, App.tasks, App.events.selectTaskItem);
+          this.updateTaskElms(App.elms.tasksContainer);
         } else {
           throw new Error(`invalid task type, the task is ${task}.`);
         }
@@ -151,13 +164,15 @@ import { Task } from "./task.js";
       isListFull() {
         return App.tasks.length >= MAX_TASK_NUM;
       },
-      renderTasks(tasksContainer, tasks) {
+      renderTasks(tasksContainer, tasks, selectTaskItemFn) {
         const fragment = document.createDocumentFragment();
         const parser = new DOMParser();
         tasksContainer.innerHTML = "";
         for (let i = 0; i < tasks.length; i++) {
           const task = tasks[i];
-          fragment.append(parser.parseFromString(task.getRenderElm(i + 1), "text/html").body.childNodes[0]);
+          const taskElm = parser.parseFromString(task.getRenderElm(i + 1), "text/html").body.childNodes[0];
+          taskElm.addEventListener("click", selectTaskItemFn.bind(App, i));
+          fragment.append(taskElm);
         }
         tasksContainer.append(fragment);
       },
@@ -168,6 +183,9 @@ import { Task } from "./task.js";
           taskDeadTimeController: panelElm.querySelector("#-app-task-date"),
         };
       },
+      updateTaskElms(container) {
+        App.elms.taskElms = container.querySelectorAll(".__task");
+      }
     },
     initApp() {
       console.log("start initializing App...");

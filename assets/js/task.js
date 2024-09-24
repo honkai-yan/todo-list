@@ -2,11 +2,13 @@ export class Task {
   name;
   detail;
   deadTime;
+  isSelected;
 
   constructor(name, detail, deadTime) {
     this.name = name;
     this.detail = detail;
     this.deadTime = deadTime;
+    this.isSelected = false;
   }
 
   getTaskObj() {
