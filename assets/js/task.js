@@ -2,17 +2,20 @@ export class Task {
   name;
   detail;
   isSelected;
+  bgColor;
 
-  constructor(name, detail) {
+  constructor(name, detail, color) {
     this.name = name;
     this.detail = detail;
     this.isSelected = false;
+    this.bgColor = color;
   }
 
   getTaskObj() {
     return {
       name: this.name,
       detail: this.detail,
+      bgColor: this.bgColor,
     };
   }
 
@@ -25,5 +28,9 @@ export class Task {
         <div class="__expand" title="查看详细"></div>
       </div>
       `;
+  }
+
+  getBgColor() {
+    return this.bgColor;
   }
 }

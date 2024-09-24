@@ -81,7 +81,13 @@ import { Task } from "./task.js";
             setErrorLen("请填写任务名称");
             return;
           }
-          App.methods.addTask(new Task(taskName, taskDetail));
+          App.methods.addTask(
+            new Task(
+              taskName,
+              taskDetail,
+              App.methods.pickColorRandomly(COLORS_CONSTANT)
+            )
+          );
           taskNameController.value = "";
           taskDetailController.value = "";
           addTaskPanelMask.style.display = "none";
@@ -236,8 +242,7 @@ import { Task } from "./task.js";
             task.getRenderElm(i + 1),
             "text/html"
           ).body.childNodes[0];
-          taskElm.style.backgroundColor =
-            this.pickColorRandomly(COLORS_CONSTANT);
+          taskElm.style.backgroundColor = task.getBgColor();
           this.bindEventWithParas(taskElm, "click", selectTaskItemFn, [i]);
           fragment.append(taskElm);
         }
@@ -279,7 +284,7 @@ import { Task } from "./task.js";
         if (allTasksInfo) {
           for (let i = allTasksInfo.length - 1; i >= 0; i--) {
             const item = allTasksInfo[i];
-            this.addTask(new Task(item.name, item.detail));
+            this.addTask(new Task(item.name, item.detail, item.bgColor));
           }
           this.renderTasks(
             App.elms.tasksContainer,
