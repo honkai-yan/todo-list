@@ -106,13 +106,14 @@
     .__title {
       font-size: 20px;
       font-weight: bold;
-      width: 150px;
+      max-width: 150px;
     }
 
     .__detail {
       color: #e4e4e4;
       font-size: 12px;
-      width: 300px;
+      margin-left: 10px;
+      max-width: 300px;
     }
 
     .__expand {
